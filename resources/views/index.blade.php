@@ -5,6 +5,18 @@
         <div class="col-12">
             <h5 class="mb-4">Todo List</h5>
 
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <table class="table table-hover ">
                 <thead>
                     <tr>
@@ -30,15 +42,21 @@
                         </td>
                         <td>
                             <div class="btn-group " role="group " aria-label="Basic example ">
-                                <a href="# " class="btn btn-primary text-white ">
+                                @if(!$todo->done_at)
+                                <a href="{{ route('done', $todo->id) }}" class="btn btn-primary text-white ">
                                     <i class='bx bx-check'></i>
                                 </a>
-                                <a href="# " class="btn btn-info text-white ">
+                                @endif
+                                <a href="{{ route('edit', $todo->id) }}" class="btn btn-info text-white ">
                                     <i class='bx bx-pencil'></i>
                                 </a>
-                                <a href="# " class="btn btn-danger text-white ">
-                                    <i class='bx bx-trash'></i>
-                                </a>
+                                <form action="{{ route('destroy', $todo->id)}}" method="POST" onSubmit="return confirm('Do you really want to delete to-do?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white ">
+                                        <i class='bx bx-trash'></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
